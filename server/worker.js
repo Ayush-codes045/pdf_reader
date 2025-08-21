@@ -1,7 +1,8 @@
+import dotenv from "dotenv";
+dotenv.config();
 import { Worker } from 'bullmq';
 import { OpenAIEmbeddings } from '@langchain/openai';
 import { QdrantVectorStore } from '@langchain/qdrant';
-import { Document } from '@langchain/core/documents';
 import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 
@@ -31,7 +32,7 @@ const worker = new Worker(
 
       const embeddings = new OpenAIEmbeddings({
         model: 'text-embedding-3-small',
-        apiKey: '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',
+        apiKey: process.env.OPENAI_API_KEY
       });
 
       // Use per-user collection name

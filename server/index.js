@@ -1,7 +1,5 @@
-// import dotenv from "dotenv";
-// dotenv.config({ path: './server/.env' });
-process.env.CLERK_PUBLISHABLE_KEY="pk_test_Z3VpZGluZy1yZWluZGVlci00Ni5jbGVyay5hY2NvdW50cy5kZXYk";
-process.env.CLERK_SECRET_KEY="sk_test_pHBbwd7BN0J2J47uTZ5XNgd2zHKifbRqkoh3hc9veC";
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
 import multer from "multer";
@@ -11,15 +9,16 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { QdrantVectorStore } from "@langchain/qdrant";
 import OpenAI from "openai";
 import { Queue } from "bullmq";
-import { requireAuth } from "@clerk/express";
+import { requireAuth,clerkMiddleware } from "@clerk/express";
 
 
 
 const app = express();
 app.use(cors());
+app.use(clerkMiddleware());
 
 const client = new OpenAI({
-  apiKey: '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', // 🔐 Replace with your actual OpenAI key
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 const queue = new Queue("file-upload-queue", {
@@ -87,7 +86,7 @@ app.get("/chat", requireAuth(), async (req, res) => {
 
   const embeddings = new OpenAIEmbeddings({
     model: "text-embedding-3-small",
-    apiKey:'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', // 🔐 Again, insert your real key
+    apiKey: process.env.OPENAI_API_KEY
   });
 
   const vectorStore = await QdrantVectorStore.fromExistingCollection(embeddings, {
