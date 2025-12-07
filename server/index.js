@@ -11,7 +11,19 @@ import OpenAI from "openai";
 import { Queue } from "bullmq";
 import { requireAuth,clerkMiddleware } from "@clerk/express";
 
+// Validate required environment variables
+if (!process.env.CLERK_PUBLISHABLE_KEY) {
+  console.error("❌ ERROR: CLERK_PUBLISHABLE_KEY is missing in your .env file");
+  console.error("   Please add: CLERK_PUBLISHABLE_KEY=pk_test_your_key_here");
+  console.error("   Get your key from: https://dashboard.clerk.com/last-active?path=api-keys");
+  process.exit(1);
+}
 
+if (!process.env.CLERK_SECRET_KEY) {
+  console.error("❌ ERROR: CLERK_SECRET_KEY is missing in your .env file");
+  console.error("   Please add: CLERK_SECRET_KEY=sk_test_your_key_here");
+  process.exit(1);
+}
 
 const app = express();
 app.use(cors());
